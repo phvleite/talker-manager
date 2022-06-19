@@ -16,8 +16,10 @@ app.get('/', (_request, response) => {
 app.use(consoleReq);
 
 const routerTalker = require('./routerTalker');
+const routerLogin = require('./routerLogin');
 
 app.use('/talker', routerTalker);
+app.use('/login', routerLogin);
 
 app.listen(PORT, () => {
   console.log('Online');
