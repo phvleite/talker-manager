@@ -17,6 +17,16 @@ router.get('/', rescue(async (_req, res) => {
   res.status(200).json(talkers);
 }));
 
+router.get('/:id', rescue(async (req, res) => {
+  const { id } = req.params;
+  const talkers = await getDataFile(dbTalker);
+  const talker = talkers.find((r) => r.id === Number(id));
+  
+  if (!talker) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+  
+  res.status(200).json(talker);
+}));
+
 // router.get('/search', rescue(async (req, res) => {
 //   const { name, maxPrice, minPrice } = req.query;
 //   const drinks = await getDataFile(dbDrinks);
@@ -27,16 +37,6 @@ router.get('/', rescue(async (_req, res) => {
 //   if (filteredDrinks.length === 0) return res.status(404).json({ message: 'Drink not found!'});
   
 //   res.status(200).json(filteredDrinks);
-// }));
-
-// router.get('/:id', rescue(async (req, res) => {
-//   const { id } = req.params;
-//   const drinks = await getDataFile(dbDrinks);
-//   const drink = drinks.find((r) => r.id === Number(id));
-  
-//   if (!drink) return res.status(404).json({ message: 'Drink not found!'});
-  
-//   res.status(200).json(drink);
 // }));
 
 // router.post('/', validateNamePrice, rescue(async (req, res) => {
