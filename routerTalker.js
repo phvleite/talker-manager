@@ -14,7 +14,16 @@ const {
 
 const dbTalker = 'talker';
 
-// router.use(authMiddleware);
+router.get('/search', authMiddleware, rescue(async (req, res) => {
+  const { q } = req.query;
+  const talkers = await getDataFile(dbTalker);
+
+  if (!q || q === '') return res.status(200).json(talkers);
+
+  const filteredTalkers = talkers.filter((tal) => tal.name.toLowerCase().includes(q.toLowerCase()));
+  
+  res.status(200).json(filteredTalkers);
+}));
 
 router.get('/', rescue(async (_req, res) => {
   const talkers = await getDataFile(dbTalker);
@@ -77,18 +86,6 @@ router.put('/:id',
 
   res.status(200).json({ id, name, age, talk });
 }));
-
-// router.get('/search', rescue(async (req, res) => {
-//   const { name, maxPrice, minPrice } = req.query;
-//   const drinks = await getDataFile(dbDrinks);
-//   const filteredDrinks = drinks
-//     .filter((r) => r.name.toLowerCase()
-//     .includes(name.toLowerCase()) && r.price <= Number(maxPrice) && r.price >= Number(minPrice));
-  
-//   if (filteredDrinks.length === 0) return res.status(404).json({ message: 'Drink not found!'});
-  
-//   res.status(200).json(filteredDrinks);
-// }));
 
 router.delete('/:id', authMiddleware, rescue(async (req, res) => {
   const { id } = req.params;
