@@ -27,13 +27,41 @@ const authMiddleware = (req, res, next) => {
   next();
 };
 
-// const validateNamePrice = (req, res, next) => {
-//   const { name, price } = req.body;
-//   if (!name || name === '') return res.status(400).json({ message: 'Invalid data!' });
-//   if (!price || price <= 0) return res.status(400).json({ message: 'Invalid data!' });
+const regexEmail = new RegExp('[a-z0-9]+@[a-z]+\\.[a-z]{2,3}');
 
-//   next();
-// };
+const validateLogin = (req, res, next) => {
+  const { email, password } = req.body;
+
+  if ([email, password].includes(undefined)) {
+    return res.status(400).json({ message: 'Os campos "email" e "senha" são obrigatórios!' });
+  }
+
+  next();
+};
+
+const validateLoginEmail = (req, res, next) => {
+  const { email } = req.body;
+
+  if (!email) return res.status(400).json({ message: 'O campo "email" é obrigatório' });
+
+  if (!regexEmail.test(email)) {
+    return res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
+  }
+
+  next();
+};
+
+const validateLoginPassword = (req, res, next) => {
+  const { password } = req.body;
+
+  if (!password) return res.status(400).json({ message: 'O campo "password" é obrigatório' });
+
+  if (password.length < 6) { 
+    return res.status(400).json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
+  }
+
+  next();
+};
 
 module.exports = {
   consoleReq,
@@ -41,4 +69,7 @@ module.exports = {
   setDataFile,
   generateToken,
   authMiddleware,
+  validateLogin,
+  validateLoginEmail,
+  validateLoginPassword,
 };

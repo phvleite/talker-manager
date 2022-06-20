@@ -3,15 +3,15 @@ const rescue = require('express-rescue');
 
 const router = express.Router();
 
-const { generateToken } = require('./utils');
+const {
+  generateToken,
+  validateLoginEmail,
+  validateLoginPassword } = require('./utils');
 
-router.post('/', rescue((req, res) => {
-  const { email, password } = req.body;
-
-  if ([email, password].includes(undefined)) {
-    return res.status(401).json({ message: 'missing fields' });
-  }
-  
+router.post('/',
+  validateLoginEmail,
+  validateLoginPassword,
+  rescue((_req, res) => {
   const token = generateToken();
 
   res.status(200).json({ token });
